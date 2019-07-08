@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Freshdesk to Asana</title>
+
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        main {
+            width: 700px;
+            align-self: center;
+            margin: auto;
+
+            border-radius: 30px;
+            background-color: white;
+            padding: 10px;
+        }
+
+        body {
+            background: linear-gradient(to top left, #13547a, #80d0c7);
+        }
+
+        p {
+            text-indent: 1.5em;
+        }
+
+        b {
+            color: rgb(18, 84, 130)
+        }
+
+        input, textarea {
+            height: 15px;
+            margin: 3px;
+            background-color: rgba(187, 220, 255, 0.5);
+            color: #122e50;
+            font-weight: bold;
+        }
+
+        input::placeholder {
+            font-weight: normal;
+        }
+
+        /*Классы*/
+
+        .image {
+            border-style: solid;
+            border-width: 5px;
+            border-radius: 10px;
+            border-color: mediumseagreen;
+        }
+
+        .hint {
+            margin: 10px;
+        }
+
+        .headers {
+            columns: 2;
+        }
+
+        .part {
+            border-radius: 10px;
+            background-color: #e6e6e6;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        .input {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            vertical-align: top;
+        }
+
+        #url-container {
+            text-align: center;
+        }
+
+        #url {
+            width: 600px;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Руководство по настройке вебхука <br>"Freshdesk to Asana"</h1>
+    <p class="hint">Вся настройка осуществляется через кабинет администратора Freshdesk. Ниже описаны шаги подключения вебхука.
+        Перед началом работы залогиньтесь в Freshdesk и Asana.</p>
+    <ol>
+        <li class="part">
+            <div class="hint">Перейдите в раздел <b>"Настройки"</b> &rarr; <b>"Автоматизации"</b> &rarr;
+                <b>"Ticket creation"</b> или <b>"Ticket updates"</b></div>
+            <div>
+                <span><img class="image" src="https://i.ibb.co/PWH0ftP/settings.jpg" alt="settings.jpg"
+                           width="230"></span>
+                <span><img class="image" src="https://i.ibb.co/bHyDzRt/automatizations.jpg" alt="automatizations.jpg"
+                           width="400"></span>
+            </div>
+        </li>
+        <li class="part">
+            <div class="hint">Рекомендуем выставить опцию <b>"Executing all matching rules"</b>, чтобы другие
+                правила не блокировали вебхук.
+            </div>
+            <div><img class="image" src="https://i.ibb.co/C9Tfk7C/rules.jpg" alt="rules.jpg" width="600"></div>
+        </li >
+        <li class="part">
+            <ul>
+                <li class="hint">
+                    В поле <b>"Rule name"</b> введите название правила.
+                </li>
+                <li class="hint">
+                    В разделе <b>"On tickets with those properties"</b> выберите фильтр, по которому будет вызываться
+                    вебхук.
+                </li>
+            </ul>
+        </li>
+        <li class="part">
+            <div>В разделе <b>"Perform these actions"</b> выберите следующие значения:</div>
+            <ul>
+                <li class="hint"><b>"Choose action"</b> - Trigger webhook;</li>
+                <li class="hint"><b>"Тип запроса"</b> - POST;</li>
+                <li class="hint"><b>"Кодировка"</b> - JSON;</li>
+                <li class="hint"><b>"Содержание"</b> - Simple;</li>
+            </ul>
+            <div>Вы увидите следующую картину:</div>
+            <img class="image" src="https://i.ibb.co/yXcdscf/perfrom.jpg" alt="perform.jpg" width="500">
+        </li>
+        <li class="part">
+            <div class="hint">
+                В раскрывающемся списке под <b>"Содержанием"</b> вам нужно выбрать интересующие вас заголовки.
+                Невыбранные сервер проигнорирует и оставит значения по умолчанию. На выбор доступны следующие
+                заголовки:
+            </div>
+            <ul class="headers">
+                <li>Subject</li>
+                <li>Description</li>
+                <li>Ticket URL</li>
+                <li>Tags</li>
+                <li>Due by time</li>
+                <li>Ticket type</li>
+                <li>Priority</li>
+                <li>Status</li>
+                <li>Company name</li>
+                <li>Group name</li>
+                <li>Agent name</li>
+                <li>Agent e-mail</li>
+            </ul>
+        </li>
+        <li class="part">
+            <div> Осталось только заполнить поле <b>"URL"</b>. Для этого воспользуйтесь
+                встроенным генератором:</div>
+            <div>
+                <label class="input">
+                    <span>Логин или <a href="https://asana.com/guide/help/api/api#gl-access-tokens">токен</a> от Asana:</span>
+                    <input id="username" onkeyup="setUrl()" type="text" placeholder="Логин от Asana" autocomplete="on">
+                </label>
+            </div>
+            <div>
+                <label class="input">
+                    <span>Пароль от Asana (для токена можно оставить пустым):</span>
+                    <input id="password" onkeyup="setUrl()" type="password" placeholder="Пароль от Asana" autocomplete="on">
+                </label>
+            </div>
+            <div>
+                <label class="input">
+                    <span>Id проекта Asana (см. URL):</span>
+                    <input id="project" onkeyup="setUrl()" type="text" placeholder="Id проекта" autocomplete="on">
+                </label>
+            </div>
+            <div>
+                <label class="input">
+                    <span>Id <a href="https://app.asana.com/api/1.0/workspaces">рабочего пространства</a> Asana (нужно
+                        только для копирования тегов):</span>
+                    <input id="workspace" onkeyup="setUrl()" type="text" placeholder="Id пространства" autocomplete="on">
+                </label>
+            </div>
+            <div>
+                <div id="url-container">
+                    <div>Ваш url:</div>
+                    <input id="url" type="text" placeholder="url" readonly>
+                </div>
+            </div>
+            <div class="hint">Скопируйте и вставьте его в соответствующее поле и нажмите кнопку
+                <b>"Preview and save"</b>. Всё!</div>
+        </li>
+    </ol>
+</main>
+
+<script>
+    function setUrl() {
+        var result = "https://freshdesk-to-asana.appspot.com/ticket?";
+        const username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        const project = document.getElementById("project").value;
+        const workspace = document.getElementById("workspace").value;
+
+        if (!checkPresent(password))
+            password = "x";
+
+        result += `username=${username}`;
+        result += `&password=${password}`;
+        result += `&project=${project}`;
+        if (checkPresent(workspace))
+            result += `&workspace=${workspace}`;
+
+        document.getElementById("url").value = result;
+    }
+
+    function checkPresent(value) {
+        return value != null && value !== "";
+    }
+</script>
+</body>
+</html>
